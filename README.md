@@ -33,3 +33,16 @@
    * Μελετήστε τις παραμέτρους που μπορεί να πάρει η `asciinema` και
      - ελαχιστοποιήστε το idle recording time σε <0.5 sec
      - προσθέστε ένα τίτλο στην καταγραφή
+3. Εργαστήριο #3 - Benchmarking python code
+   * Εγκαταστήστε benchmarking και performance monitoring εργαλεία, λοπως τα προτεινόμενα `hyperfine` και `py-spy` και εκτελέστε I/O ή CPU intensive κώδικα python ώστε να αξιολογήσετε την απόδοσή του ή σημεία που με τη βελτίωσή τους η συνολική απόδοση θα μπορούσε να αυξηθεί.
+   * Μπορείτε να κάνετε την εγκατάσταση των
+     - [hyperfine](https://github.com/sharkdp/hyperfine) μέσω `brew`
+     - [py-spy](https://github.com/benfred/py-spy) μέσω `pip3` (ίσως πρέπει να εγκατασταθεί στο σύστημά σας). _Ειδικά για το py-spy λάβετε υπόψη σας [αυτό](https://github.com/benfred/py-spy/blob/master/README.md#when-do-you-need-to-run-as-sudo) και ίσως χρειαστει να εγκαταστείσετε το py-spy και ως su_
+   * Εξάσκηση στη χρήση του py-spy & του hiperfine
+     - Χρησιμοποιήστε τον κώδικα στο [lab3/rand_ints.py](./lab3/rand_ints.py) για να παράγετε αρχεία τυχαίων ακεραίων αριθμων.
+     - Χρησιμοποιήστε τον κώδικα στο [lab3/bubble.py](./lab3/bubble.py) για να ταξιμονήσετε τα αρχεία τυχαίων ακεραίων αριθμων που παράγατε.
+     - Χρησιμοποιήστε το hyperfine για να δείτε το χρόνο εκτέλεσης της bubble sort ταξινόμησης
+       - Πειραματιστείτε με παραμέτρους που μπορείτε να δώσετε στο hyperfine, πχ `--warmup`
+     - Αξιολογήστε την απόδση του bubble sort σε σχέση με άλλους sorting αλγορίθμους, πχ insertionsort ή quicksort, τους οποίους βρείτε ή υλοποιήστε [;-)](https://medium.com/@george.seif94/a-tour-of-the-top-5-sorting-algorithms-with-python-code-43ea9aa02889)
+     - Χρησιμοποιήστε το py-spy για να δείτε ποιο τμήμα ενός αλγορίθμου ταξινόμησης αναλώνει το μεγαλύτερο χρονικό διάστημα κατά την εκτέλεσή του
+       - Ερμηνεύστε το svg που παράγει, πώς μπορείτε να το αξιοποίησετε για το profiling/benchmarking ενός κώδικα;
