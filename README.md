@@ -46,3 +46,13 @@
      - Αξιολογήστε την απόδση του bubble sort σε σχέση με άλλους sorting αλγορίθμους, πχ insertionsort ή quicksort, τους οποίους βρείτε ή υλοποιήστε [;-)](https://medium.com/@george.seif94/a-tour-of-the-top-5-sorting-algorithms-with-python-code-43ea9aa02889)
      - Χρησιμοποιήστε το py-spy για να δείτε ποιο τμήμα ενός αλγορίθμου ταξινόμησης αναλώνει το μεγαλύτερο χρονικό διάστημα κατά την εκτέλεσή του
        - Ερμηνεύστε το svg που παράγει, πώς μπορείτε να το αξιοποίησετε για το profiling/benchmarking ενός κώδικα;
+4. Εργαστήριο #4 - Using the terminal as an ide
+    * Εγκαταστήστε μερικά plugin στο vi, π.χ.:
+      - `vim-plug` minimalist Vim plugin manager
+      - `python-mode` a Python IDE for Vim
+    * Εγκαταστήστε μερικά python development εργαλεία, π.χ.:
+     - `pylint` a tool that checks for errors in Python code, tries to enforce a coding standard and looks for code smells
+    * Εξάσκηση στη χρήση vim ως python IDE:
+      - Αναπτύξτε ένα σύντομο κώδικα σε python αξιοποιώντας το vim ως IDE. Κάντε debug και εκτελέστε τον κώδικά σας απ' ευθείας μέσα από το vim με εντολές του python-mode.
+      - Βρείτε και εγκαταστήστε ένα git plugin και δείξτε την αξιοποίηση του git μέσα από το vim.
+      - Εγκαταστήστε ένα plugin για άλλη γλώσσα προγραμματισμού της επιλογής σας, ώστε να αξιοποιήσετε το vim ως IDE και γι αυτή.
