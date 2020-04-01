@@ -56,3 +56,10 @@
       - Αναπτύξτε ένα σύντομο κώδικα σε python αξιοποιώντας το vim ως IDE. Κάντε debug και εκτελέστε τον κώδικά σας απ' ευθείας μέσα από το vim με εντολές του python-mode.
       - Βρείτε και εγκαταστήστε ένα git plugin και δείξτε την αξιοποίηση του git μέσα από το vim.
       - Εγκαταστήστε ένα plugin για άλλη γλώσσα προγραμματισμού της επιλογής σας, ώστε να αξιοποιήσετε το vim ως IDE και γι αυτή.
+5. Εργαστήριο #5 - Αξιοποιήστε το σύστημά σας για ανάπτυξη ανεξάρτητων python projects
+   * Εγκαταστήστε τα `pip3`, `pipenv` και `virtualenv`, δείτε εδώ:
+   https://asciinema.org/a/bmEf1BiVyWvmbld5SyQK0ORYW
+   * Δημιουργήστε ένα environment εγκαταστήστε εντός αυτού ένα module, πχ `psutil` και γράψτε κώδικα που το χρησιμοποιεί. Εαν αντιγράψετε αυτό τον κώδικα σε άλλο φάκελο, ο κώδικας έχει ένα unsatified dependency!.. Τέλεια, πετύχατε isolation των project σας.
+   https://asciinema.org/a/6450xvAveLYOQXcMfrdN7oKM2
+   * Και αν θέλετε να _μεταφέρετε_ τα requirements από ένα project σε ένα άλλο;
+   https://asciinema.org/a/kzrRIfVi4u2tH4gSlpG9oapiJ
