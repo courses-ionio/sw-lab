@@ -63,3 +63,12 @@
    https://asciinema.org/a/6450xvAveLYOQXcMfrdN7oKM2
    * Και αν θέλετε να _μεταφέρετε_ τα requirements από ένα project σε ένα άλλο;
    https://asciinema.org/a/kzrRIfVi4u2tH4gSlpG9oapiJ
+6. Εργαστήριο #6 - Εκτελέστε _βαριές_ εργασίες στο background του terminal σας και λάβετε ειδοποίηση όταν αυτή έχει ολοκληρωθεί
+   * Εγκαταστήστε το `ntfy` και κάνετε το απαραίτητο configuration για να στέλνει τις ειδοποιήσεις του στο syslog του συστήματός σας.
+     - Βεβαιωθείτε ότι το `/var/log/syslog` υπάρχει και ενημερώνεται. Αν όχι, βεβαιωθείτε για την εγκατάσταση του σχετικου deamon με την εντολή `sudo apt-get install --reinstall rsyslog` και στη συνέχεια βεβαιωθείτε για την ενεργοποίησή του με την εντολή `sudo service rsyslog restart`.
+     - Ελέγξτε ότι το syslog γράφεται, εκτελέστε την εντολή `logger Hello logger service!` (δεν χρεάζεται quotes) και ελέγξτε ότι γράφτηκε το μήνυμα στο αρχείο syslog με την εντολή `tail /var/log/syslog`.
+   * Κάνετε configure το ntfy (δημιουργήστε ή ενημερώστε το `ntfy.yml` αρχείο σας) ώστε να στέλνει τις ειδοποιήσεις του στο syslog.
+   * Βεβαιωθείτε ότι υπάρχει εγκατεστημένο το python module `psutil` εγκατεστημένο στο σύστημά σας (_αν όχι_, `pip install psutil` ;-)
+   * **Checkpoint**: η εκτέλεση `ntfy done -h` στο terminal σας εμφανίζει (μεταξύ άλλων) _-p PID, --pid PID     Watch a PID instead of running a new command_
+   * Εκτελέστε κάποιο κώδικα ο οποίος χρειάζεται χρόνο για την εκτέλεσή του. Παράδειγμα θα ήταν ένας κώδικας σε python ο οποίος υπολογίζει τον ν-οστό _πρώτο_ αριθμό.
+   * Ξεκινήστε την εκτέλεση του _αργού κώδικα_ στέλνοντας την εκτέλεση στο background του terminal (με χρήση `&`), πάρτε το pid και δώστε το στο ntfy ώστε να σας ενημερώσει όταν ολοκληρωθεί αυτό το process, πάλι στο background. Κάντε `tail -f` στο syslog και περιμένετε την ενημέρωση από το ntfy.
