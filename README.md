@@ -79,3 +79,12 @@
     * Εγκαταστήστε ένα από τα διαθέσιμα [templates](https://gohugo.io/templates/).
     * Προσθέστε και λίγο [περιεχόμενο](https://gohugo.io/content-management/).
     * Έτοιμο για δημοσίευση.. _πού όμως;_ (δείτε στο εργαστήριο #8)
+8. Εργαστήριο #8 - Αξιοποίηση ssh και δημοσίευση περιεχομένου στο cloud
+   * Δημιουργήστε ένα account στο https://ide.goorm.io/ και (μετά το resource authorisation, που μπορεί να πάρει 1-2 ημέρες) ξεκινήστε ένα Ubuntu container.
+   * Ανακτήστε το ssh configuration του container σας (μενού: Container > SSH Configuration)
+   * Συνδεθείτε από τον υπολογιστή σας στο goorm container σας με ssh.
+   * Δημιουργήστε ένα φάκελο για την αποθήκευση του site που έχετε υλοποιήσει στο εργαστήριο #7.
+   * Στον υπολογιστή σας, με χρήση του hugo που εγκαταστήσατε στο περασμένο εργαστήριο, κάντε export το site σας ως στατικές html σελίδες (`hugo -D -d <destivation folder>`)
+   * Από τον υπολογιστή σας με αξιοποίηση του εργαλείου `rsync` ανεβάστε το `<destination folder>` στο goorm.
+   * Αξιοποιήστε το SimpleHTTPServer που παρέχει η python για να παρέχετε πρόσβαση στις στατικές σελίδες σας με το κατάλληλο port forwarding (μενού: Container > Port Forwarding Configuration).
+     - Προσπαθήστε να [εγκαταστήστε/ρυθμίσετε](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) τον Apache httpd για να παρέχει πρόσβαση στις στατικές σας σελίδες.
