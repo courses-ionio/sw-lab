@@ -88,3 +88,43 @@
    * Από τον υπολογιστή σας με αξιοποίηση του εργαλείου `rsync` ανεβάστε το `<destination folder>` στο goorm.
    * Αξιοποιήστε το SimpleHTTPServer που παρέχει η python για να παρέχετε πρόσβαση στις στατικές σελίδες σας με το κατάλληλο port forwarding (μενού: Container > Port Forwarding Configuration).
      - Προσπαθήστε να [εγκαταστήστε/ρυθμίσετε](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) τον Apache httpd για να παρέχει πρόσβαση στις στατικές σας σελίδες.
+9. Εργαστήριο #9 - Αξιοποίηση έτοιμων docker images
+
+10. Εργαστήριο #10 - Δημιουργία και δημοσίευση ενός docker image
+    * Δημιουργήστε ένα account στο https://hub.docker.com/
+      - Προφανώς... free account, επιλέξτε: _Community_:  For public repos - The basics of Docker for every developer, including _unlimited public repos_ and __one__ _private repos_ (ένα μας αρκεί)
+      - Κάνετε verify και ό,τι άλλο χρειάζεται και αφήστε το να περιμένει.
+    * Πίσω στο terminal σας.
+      - Δημιουργήστε ένα κενό folder, με όνομα πχ `mybusybox`.
+      - Εντός αυτού του φακέλου δημιουργήστε ένα αρχείο με όνομα `Dockerfile` και περιεχόμενο:
+        ```
+        FROM busybox 
+        CMD echo "Hello world! This is __ονομά σας__ first Docker image."
+        ```
+      - Κάντε build το δικό σας Docker image εκτελώντας στο τερματικό σας την εντολή: `docker build -t __your_name__/mybusybox .`
+      - Αν όλα πήγαν καλά, το πρώτο σας image είναι έτοιμο, πχ:
+      ```
+      $ docker image ls
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+__your_name__/mybusybox    latest              f43f1c562253        53 seconds ago      1.22MB
+      ```
+      - Εκτελέστε το με `docker run __your_name__/mybusybox`
+    * Κάτι πιο περίπλοκο τώρα.
+      - Δημιουργήστε ένα κενό folder, με όνομα πχ `mystaticweb`.
+      - Μεταφέρετε εδώ ένα static web φάκελο, πχ αυτό του εργαστηρίου 8.
+      - Εντός του φακέλου `mystaticweb` δημιουργήστε ένα αρχείο με όνομα `Dockerfile` και περιεχόμενο:
+        ```
+        FROM httpd:2.4
+        COPY . /usr/local/apache2/htdocs/
+        ```
+      - Κάντε build το νέο Docker image: `docker build -t __your_name__/my-static-web:v1 .`
+        - tip: προσθέσαμε και ένα tag στο image το `v1`.
+      - Εκτελέστε: `docker run -dit --name localstaticweb -p 8080:80 __your_name__/my-static-web:v1`
+      - Δοκιμαστε από ένα browser να δείτε το web που προσθέσατε το image. _Hint: βρείτε σε ποια ip ακούει ο container σας με `docker-machine ip default`._
+    * Και τέλος μοιραστείτε το Docker image σας.
+      - Βήμα α (στο hub.docker.com που περιμένει):
+        - Δημιουργήστε ένα νέο (private) repository με όνομα πχ my-static-web.
+        - Αν θέλετε κάποιος άλλος να μπορεί να χρησιμοποιήσει το image σας, κάντε τον _collaborator_.
+      - Βήμα β (στο terminal):
+        - Κάντε login στο docker hub στο οποίο λίγο πριν δημιουργήσατε το repository: `docker login`.
+        - Κάντε push το image σας: `docker push __your_name__/my-static-web`.
