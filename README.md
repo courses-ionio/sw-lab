@@ -105,8 +105,8 @@
       - Αν όλα πήγαν καλά, το πρώτο σας image είναι έτοιμο, πχ:
       ```
       $ docker image ls
-REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
-__your_name__/mybusybox    latest              f43f1c562253        53 seconds ago      1.22MB
+      REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+      __your_name__/mybusybox    latest              f43f1c562253        53 seconds ago      1.22MB
       ```
       - Εκτελέστε το με `docker run __your_name__/mybusybox`
     * Κάτι πιο περίπλοκο τώρα.
