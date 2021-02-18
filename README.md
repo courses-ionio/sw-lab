@@ -95,7 +95,7 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
     * Ρυθμίστε username και e-mail `git config --global user.name "Your name here"` και `git config --global user.email "...your_email...@ionio.gr"`
     * Προαιρετικά `git config --global color.ui true`
     * Δημιουργήστε ssh keys για διασύνδεση του περιβάλλοντος εργασίας σας με το github account σας.
-        * Εκτελέστε `sh-keygen -t rsa -C "...your_email...@ionio.gr"` (δώστε ένα password που δεν θα ξεχάσετε, αφήστε το προτεινόμενο folder/file)
+        * Εκτελέστε `ssh-keygen -t rsa -C "...your_email...@ionio.gr"` (δώστε ένα password που δεν θα ξεχάσετε, αφήστε το προτεινόμενο folder/file)
         * Αντιγράψτε το __δημόσιο__ κλειδί σας `cat ~/.ssh/id_rsa.pub` και μεταβείτε στο github:
             * Στο https://github.com/settings/keys σας και προσθέστε ένα νέο ssh key σας.
         * Ελέγξτε τη σύνδεση terminal-github με την εντολή  
