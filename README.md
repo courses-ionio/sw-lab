@@ -137,7 +137,8 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
         `mkdir /workspace/jekyll` και ας μεταβούμε σε αυτό  
         `cd /workspace/jekyll`
         * Αξιοποιούμε το bundler που εγκαταστήσαμε νωρίτερα `bundle init`
-        * Προσθέτουμε το `gem "jekyll"` ως dependency στην τελευταία γραμμή του Gemfile που μόλις δημιουργήθηκε.
+        * Προσθέτουμε το `gem "jekyll"` ως dependency στην τελευταία γραμμή του Gemfile που μόλις δημιουργήθηκε.  
+        __Προσοχή:__ να μην ξεκινά και αυτή η γραμμή με # όπως η `# gem "rails"` γιατί τότε θα είναι σχόλιο!!
         * Εκτελούμε `bundler` και το project μας αποκτά όλα τα ruby gems που απαιτούνται
         * Ας δημιουργήσουμε το περιεχόμενό μας:
             * Πρώτα ένα folder για το περιεχόμενό μας `mkdir /workspace/jekyll/site`
@@ -204,7 +205,7 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
             ```
             * Αρχείο data `vi /workspace/cv/_data/details.yml`, προσέξτε το αρχείο να ξεκινάει με μία γραμμή `---` και κάθε _μεταβλητή_ που θέλουμε να είναι διαθέσιμη στο παραγώμενο html να είναι _κλειδί_ στο yml αρχείο:
                 * btw.. λίγα λόγια για το [YAML](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started/)
-                
+
             ```
              ---
             # Personal details
