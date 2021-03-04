@@ -292,3 +292,37 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
     * Τσεκάρετε τακτικά locally, όταν είστε ικανοποιημένοι ανεβάστε στο github με push
 3. Φροντίστε για έχετε καταγράψει στο asciinema τη δουλεία σας
 4. Κάντε commit την πρόοδό σας
+
+---
+
+##### CV + Netlify
+
+Έχουμε ήδη αξιοποιήσει τις δυνατότητες που παρέχουν τα Github & Jekyll για continuous deployment σε Github pages.  
+Τώρα θα αξιοποιήσουμε και τις δυνατότητες που παρέχει το [Netlify](https://www.netlify.com/) για serverless δημοσιοποίηση διαδικτυακού περιεχομένου.  
+
+* Κάνετε εγγραφή στο [Netlify](https://www.netlify.com/) και ένα νέο site βασισμένο σε ένα [Git repository](https://www.netlify.com/blog/2015/10/28/a-step-by-step-guide-jekyll-3.0-on-netlify/).
+    * Επιλέξτε ως Git provider το Github και (αναγκαστικά) δώστε τις εξουσιοδοτήσεις που ζητά - προσπαθήστε να δώσετε όσο λιγότερη πρόσβαση μπορείτε, πχ μόνο στο repo που θέλετε να φιλοξενήσετε στο Netlify.
+    * Επιλέξτε το **repository** που θέλετε να προσθέσετε και ποιο **branch** περιέχει τον κώδικα που θα κάνετε deploy.  
+    __N.B.:__ σε αυτό το branch θα πρέπει να κάνετε commit/push ώστε οι αλλαγές να κάνουν trigger το νέο deployment.
+    * Δεδομένου ότι είναι jekyll based το site μας, δώστε τα κατάλληλα [basic build settings](https://docs.netlify.com/configure-builds/common-configurations/#jekyll):
+        * Build command: `jekyll build`
+        * Publish directory: `_site`  
+
+
+:-) Τέλος... _καλό;_        
+:-/ μπα..
+
+* Μια συλλογή από σφάλματα που ίσως εμγανίζονται στο deploy log: (´･_･`)
+    * Το Netlify δεν βρίσκει το jekyll...  
+    * `GitHub Metadata: Error processing value 'title':`
+
+
+* Επιβεβαιώστε ότι:
+    * Στο github repository έχετε περιλάβει τα αρχεία `Gemfile` και `Gemfile.lock` που έχετε δημιουργήσει για να _βλέπετε_ τοπικά το jekyll based cv σας. Στο github αυτά δεν ήταν απαραίτητα, αφού ουσιαστικά τα είχαμε δημιουργήσει τοπικά για να κάνουμε replicate το setup του github/pages, τώρα είναι απαραίτητα στο Netlify, άρα κάνετε τα git add/commit/push.
+    * Στο github repository έχετε περιλάβει ενα _config.yml αρχείο, πρόκειται για jekyll config file το οποίο στο github (πάλι) δεν ήταν απαραίτητο, αλλά για το Netlify χρειάζεται. Τα ελάχιστα δεδομένα που πρέπει να περιέχει είναι τιμή για το όνομα του `repository` που συνδέετε με το Netlify
+
+Σε κάθε push που κάνετε στο github γίνεται πλέον αυτόματα trigger ένα deploy στο githib pages και ένα ακόμη στο Netlify.  
+🌍🔋__Think before you push__ (to the repo)! Test locally! Αν όχι για άλλο λόγο, γιατί το free account του Netlify σας δίνει 300 build minutes/month,
+
+**ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
+* Εξερευνήστε περισσότερο το Netlify, πχ χαρίστε ένα πιο κομψό url στο site σας.
