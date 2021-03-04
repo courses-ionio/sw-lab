@@ -269,6 +269,30 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
             * `export LANGUAGE=en_US:en`
             * `export LC_ALL=en_US.UTF-8`
                 * _τα τρία τελευταία προσθέστε τα στο τέλος του `/root/.bashrc`_
+        * **upd.** Αν θέλουμε υποστήριξη σε ελληνικά (πχ στο vim) 
+            * Εκτέλεση
+            ```
+            echo "el_GR UTF-8" > /etc/locale.gen
+            locale-gen el_GR.UTF-8         
+            ```
+            * Προσθήκη στο `/root/.bashrc` και source το ίδιο αρχείο για να ξαναφορτωθεί
+            ```
+            export LANG="el_GR.UTF-8"
+            export LC_CTYPE="el_GR.UTF-8"
+            export LC_NUMERIC="el_GR.UTF-8"
+            export LC_TIME="el_GR.UTF-8"
+            export LC_COLLATE="el_GR.UTF-8"
+            export LC_MONETARY="el_GR.UTF-8"
+            export LC_MESSAGES="el_GR.UTF-8"
+            export LC_PAPER="el_GR.UTF-8"
+            export LC_NAME="el_GR.UTF-8"
+            export LC_ADDRESS="el_GR.UTF-8"
+            export LC_TELEPHONE="el_GR.UTF-8"
+            export LC_MEASUREMENT="el_GR.UTF-8"
+            export LC_IDENTIFICATION="el_GR.UTF-8"
+            export LANG=el_GR.UTF-8
+            export LC_ALL=el_GR.UTF-8
+            ```
         * Σύνδεση με github repository  
             * `git init`
             * `git remote add origin git@github.com:riggas-ionio/cv-1.git`
