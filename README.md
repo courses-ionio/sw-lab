@@ -269,7 +269,7 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
             * `export LANGUAGE=en_US:en`
             * `export LC_ALL=en_US.UTF-8`
                 * _τα τρία τελευταία προσθέστε τα στο τέλος του `/root/.bashrc`_
-        * **upd.** Αν θέλουμε υποστήριξη σε ελληνικά (πχ στο vim) 
+        * **upd.** Αν θέλουμε υποστήριξη σε ελληνικά (πχ στο vim)
             * Εκτέλεση
             ```
             echo "el_GR UTF-8" > /etc/locale.gen
@@ -350,3 +350,46 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
 
 **ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
 * Εξερευνήστε περισσότερο το Netlify, πχ χαρίστε ένα πιο κομψό url στο site σας.
+
+---
+
+##### CV 2 PDF
+
+Μπορείτε αν αξιοποιήσετε pandoc για μετατροπή yml + html template σε latex και στη συνέχεια να μετατρέψετε το latex σε pdf με κάποιο template.
+
+Εδώ θα αξιοποιήσουμε την python βιβλιοθήκη weasyprint.org
+
+* Για να εγκαταστήσουμε weasyprint χρειαζόμαστε.. μερικά προαπαιτούμενα:
+`apt update` και στη συνέχεια  
+`apt-get install build-essential python3-dev python3-pip python3-setuptools python3-wheel python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info`
+* Εγκατάσταση weasyprint μέσω pip:
+`pip3 install weasyprint`
+
+* _Όσο το jekyll τρέχει_ μπορούμε να ζητήσουμε από το weasyprint να μετατρέψει ό,τι βλέπουμε στο http://localhost:4000 σε pdf. Πώς;
+    * Εντός του `/workspace/github/cv-1`, δημιουργούμε ένα folder για το pdf cv μας `mkdir pdf`
+    * Στη συνέχεια εκεί εκτελούμε `weasyprint http://localhost:4000/ pdf/cv.pdf`
+        * Ελέγχουμε το αποτέλεσμα μέσα από ένα browser στο host μηχάνημά μας.. :-)
+    * Τροποποιούμε το `index.html` αρχείο ώστε να έχει ένα link προς το pdf cv μας.
+
+* Πώς μπορούμε να καθορίσουμε την print version εμφάνιση του cv μας;
+    * Το weasyprint μπορεί να λάβει παράμετρο ένα css με _οδηγίες_ για το styling της print version του cv
+    * Δημιουργούμε το `_template/pdf.css` με ενδεικτικό περιεχόμενο:
+    ```
+    @page {
+      margin: 0cm; /* Set margin on each page */
+      padding: 1cm; /* Set padding on each page */
+    }
+    ```  
+    και εκτελούμε  
+    `weasyprint http://localhost:4000/ pdf/cv.pdf -s _template/pdf.css`
+        * Η εμφάνιση του παραγώμενου pdf άλλαξε! Βεβλιτώστε ακόμη περισσότερο: https://weasyprint.readthedocs.io/en/stable/tutorial.html
+
+
+* Πώς όμως μπορούμε να αυτοματοποιήσουμε τη διαδικασία; Δλδ κάθε φορά που κάνουμε μια αλλαγή στο index.html ή στο details.yml και κάνουμε commit το pdf να δημιουργείται αυτόματα;
+    * Git [hooks](https://www.atlassian.com/git/tutorials/git-hooks)
+        * Συνδυάστε [αυτό](https://stackoverflow.com/questions/30376741/run-script-before-commit-and-include-the-update-in-this-commit) και [αυτό](https://stackoverflow.com/questions/3284292/can-a-git-hook-automatically-add-files-to-the-commit/12802592#12802592).
+
+* To link που εμφανίζεται στο pdf είναι σωστό;
+    * Πώς μπορείτε να το αποφύγετε αυτό;
+        * Δοκιμάστε κάτι [τέτοιο](https://www.w3schools.com/css/css3_mediaqueries.asp).
+        * ή αξιοποιήστε το `_template/pdf.css` για να κρύψετε το link.
