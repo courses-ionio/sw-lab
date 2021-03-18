@@ -393,3 +393,82 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
     * Πώς μπορείτε να το αποφύγετε αυτό;
         * Δοκιμάστε κάτι [τέτοιο](https://www.w3schools.com/css/css3_mediaqueries.asp).
         * ή αξιοποιήστε το `_template/pdf.css` για να κρύψετε το link.
+
+##### GIT COMMIT/MQTT 2 Slack
+
+Αποκτήστε ένα free account στο [Slack](https://slack.com/) και δημιουργήστε ένα workspace.
+* Εντός του workspace δημιουργήστε ένα νέο channel, έστω `sw-notifications`.
+* Σε ένα browser μεταβείτε στο https://api.slack.com/apps και επιλέξτε `Create New App`.
+    * Δώστε ένα όνομα, πχ `my-sw-notif-app` και διαλέξτε το workspace στο οποίο αυτό το app θα κοινοποιεί.
+    * Το app πρέπει να δημιουργήθηκε, από τις επιλογές που έχετε στο ui διαλέξτε  
+    ```
+    Incoming Webhooks
+    Post messages from external sources into Slack.
+    ```
+    και εκεί κάνετε toggle το `Activate Incoming Webhooks`.  
+    Στο τέλος της σελίδας διαλέξτε `Add New Webhook to Workspace` και επιλέξτε σε ποιο channel να γίνεται η αποστολή των μηνυμάτων, πχ `notifications`.
+    Αφήστε τη σελίδα να περιμένει, παρατηρήστε ότι σας προβάλει ένα παράδειγμα curl post προς το channel σας (έχουν κρυφτεί τα keys):  
+    ```
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/____/____/____
+    ```
+
+Εντός του container που δουλεύουμε όλες αυτές τις εβδομάδες...
+* Εγκαταστήστε το `curl` για να κάνουμε μια πρώτη δοκιμή.  
+`apt install curl`
+* Στη συνέχεια δοκιμάστε να κάλεσετε το curl όπως δείχνει η πιο πάνω εντολή, αλλά με το slack url που αντιστοιχεί στο δικό σας workspace/channel.
+    * Αν όλα έγιναν σωστά, πρέπει στο slack να λάβατε ένα _Hello, World_ μήνυμα από την εφαρμογή σας :-)
+* Μεταβείτε εντός του folder που δουλέυουμε το cv (`cd /workspace/github/cv-1/`).
+* Εκτελέστε εκεί  
+```
+hash=$(git rev-parse --short HEAD)
+msg=$(git log -1 --pretty=%B)
+curl -X POST -H 'Content-type: application/json' --data '{"text":"Last CV commit ('$hash'): '"$msg"'"}' https://hooks.slack.com/services/___/___/___
+```
+* Προσθέστε τον κώδικα στο hook της περασμένης εβδομάδας.
+* Επιπλέον, Χρησιμοποιήστε το κώδικα:  
+```
+if ! lsof -i:4000
+then
+  echo Starting Jekyll
+  bundle exec jekyll serve --host 0.0.0.0 &
+else
+  echo Jekyll running on 4000
+fi
+```
+για να ελέγξετε αν το Jekyll ήδη τρέχει.
+* Κάντε κάποια αλλαγή σε ένα αρχείο του repo σας και με το commit θα πρέπει να λάβετε ένα μήνυμα στο slack.
+
+Ας δουλέψουμε με ένα mqtt broker.
+* Εγκαταστήστε το [mosquitto](https://mosquitto.org/): `apt-get install mosquitto`
+    * Τρέχει;... δοκιμάστε: `/etc/init.d/mosquitto status`, αν το αποτέλεσμα είναι ` * mosquitto is not running` ελέγξτε το logging που έγινε κατά την εγκατάσταση.
+    Αν αναφέρει `invoke-rc.d: policy-rc.d denied execution of start.` τότε:  
+    ```
+    printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
+    /etc/init.d/mosquitto start
+    /etc/init.d/mosquitto status
+    ```
+    και το πρόβλημα πρέπει να λύθηκε, αν όχι _google it!_
+* Εγκαταστήστε και αντίστοιχους clients: `apt-get install mosquitto-clients`
+    * Δοκιμάστε... `mosquitto_sub -t "notifications" &`
+    και.. `mosquitto_pub -m "Hello World from mosquitto_pub client" -t "notifications"`  
+    Εμφανίστηκε το μήνυμα;
+
+* Εγκαταστήστε το mqttwarn:
+    ```
+    pip3 install --upgrade
+    pip3 install mqttwarn
+    ```
+    * Δημιουργήστε και μεταβείτε σε ένα φάκελο `/workspace/mqttwarn`
+    * Ακολουθήστε τα βήματα του configuration που περιγράφονται:  
+    ```
+    # Create configuration file
+    mqttwarn make-config > mqttwarn.ini
+
+    # Create file for custom functions
+    mqttwarn make-samplefuncs > samplefuncs.py
+    ```
+    * Προσθέστε το config τις απαραίτητες ρυθμίσεις για το [http](https://github.com/jpmens/mqttwarn/blob/master/HANDBOOK.md#http).
+        * Τροποποιήστε κατάλληλα το post action ώστε να κάνει post στο url του slack api endpoint σας
+    * ίσως χρειαστεί λίγο debugging ο κώδικας του http module :-)
+    * :fireworks: Αφού δεν υπάρχει module για το slack api... γιατί δε φτιάχνετε ένα; _λίγη αλλαγή το module http απαιτείται μόνο!_  
+    :fireworks: :fireworks: Αφού το φτιάξετε, γιατί δεν το ανεβάζετε και στο github! Κάντε και ένα pull request στο mqttwarn και ίσως γίνετε μέρος του δημόσιου ανοιχτού λογισμικού! :-)
