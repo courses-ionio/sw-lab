@@ -468,7 +468,41 @@ fi
     mqttwarn make-samplefuncs > samplefuncs.py
     ```
     * Προσθέστε το config τις απαραίτητες ρυθμίσεις για το [http](https://github.com/jpmens/mqttwarn/blob/master/HANDBOOK.md#http).
-        * Τροποποιήστε κατάλληλα το post action ώστε να κάνει post στο url του slack api endpoint σας
-    * ίσως χρειαστεί λίγο debugging ο κώδικας του http module :-)
-    * :fireworks: Αφού δεν υπάρχει module για το slack api... γιατί δε φτιάχνετε ένα; _λίγη αλλαγή το module http απαιτείται μόνο!_  
+        * Τροποποιήστε κατάλληλα το post action ώστε να κάνει post στο url του slack api endpoint σας.  
+        Σημεία στο αρχείο init που χρειάζεται να παρέμβετε είναι τα:
+        ```
+        ; name the service providers you will be using.
+        launch    = file, log, http
+
+        ; -------
+        ; Targets
+        ; -------
+
+        [config:http]
+        timeout = 60
+        targets = {
+                        #method     #URL               # query params or None                              # list auth # Json
+          'notifications'    : [ "post", "https://hooks.slack.com/services/___/___/___", None, True ]
+          }
+
+        ; ------------------------------------------
+        ;                  Basic
+        ; ------------------------------------------
+
+        [hello/1]
+        ; echo '{"name": "temperature", "number": 42.42}' | mosquitto_pub -h localhost -t hello/1 -l
+        targets = log:info
+        format = u'{name}: {number} => {_dthhmm}'
+
+        [notifications]
+        targets = http
+        ```        
+    * Ίσως χρειαστεί λίγο debugging ο κώδικας του http module :-)  
+    Αν παρατηρήσετε τα logging νημύματα του mqttwarn προκύπτει σφάλμα κατά την εκτέλεση του αρχείο `/usr/local/lib/python3.8/dist-packages/mqttwarn/services/http.py`: ***'Request' object has no attribute 'add_data'***.  
+    Κάνετε edit το αρχείο τροποποιώντας τη γραμμή:  
+    `#request.add_data(encoded_params)` σε  
+    `request.data = bytes(encoded_params, 'utf-8')`
+    Αν κάνετε publish στο mosquitto ένα json το οποίο αποδέχεται το slack, θα πρέπει να δείτε το μήνυμά σας στο slack.  
+    Αν το μήνυμα δεν είναι κατάλληλα μορφοποιημένο για το slack, θα βλέπετε στο mqttwarn log ***HTTP Error 400: Bad Request***    
+    * :fireworks: Αφού δεν υπάρχει module για το slack api (που να δουλεύει με webhook)... γιατί δε φτιάχνετε ένα; _λίγη αλλαγή το module http απαιτείται μόνο!_  
     :fireworks: :fireworks: Αφού το φτιάξετε, γιατί δεν το ανεβάζετε και στο github! Κάντε και ένα pull request στο mqttwarn και ίσως γίνετε μέρος του δημόσιου ανοιχτού λογισμικού! :-)
