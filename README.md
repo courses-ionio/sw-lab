@@ -394,6 +394,8 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
         * Δοκιμάστε κάτι [τέτοιο](https://www.w3schools.com/css/css3_mediaqueries.asp).
         * ή αξιοποιήστε το `_template/pdf.css` για να κρύψετε το link.
 
+---
+
 ##### GIT COMMIT/MQTT 2 Slack
 
 Αποκτήστε ένα free account στο [Slack](https://slack.com/) και δημιουργήστε ένα workspace.
@@ -506,3 +508,131 @@ fi
     Αν το μήνυμα δεν είναι κατάλληλα μορφοποιημένο για το slack, θα βλέπετε στο mqttwarn log ***HTTP Error 400: Bad Request***    
     * :fireworks: Αφού δεν υπάρχει module για το slack api (που να δουλεύει με webhook)... γιατί δε φτιάχνετε ένα; _λίγη αλλαγή το module http απαιτείται μόνο!_  
     :fireworks: :fireworks: Αφού το φτιάξετε, γιατί δεν το ανεβάζετε και στο github! Κάντε και ένα pull request στο mqttwarn και ίσως γίνετε μέρος του δημόσιου ανοιχτού λογισμικού! :-)
+
+---
+
+##### HUGINN Agents
+
+Αν έχετε δοκιμάσει το [IFTTT](https://ifttt.com/) θα έχετε καταλάβει ότι είναι _ανάγκη_ ορισμένα tasks να εκτελούνται μόνα τους και _(μόνο)_ όταν κάτι ενδιαφέρον υπάρχει να ενημερώνεστε.  
+Το Huginn είναι ένα free και open source περιβάλλον στο οποίο μπορείτε να προγραμματίσετε την εκτέλεση _tasks_ από ένα σύνολο από διαθέσιμους agents.  
+[read the docs](https://github.com/huginn/huginn) | [view introductory screencast](http://vimeo.com/61976251)
+
+Πάμε:...
+* Πρώτη προσπάθεια με ένα έτοιμο στημένο huginn docker image.
+    * Σε ένα terminal (_εκτός του container που παιδεύουμε_): `docker run -it -p 3000:3000 --name ionio-sw-lab-huginn huginn/huginn`
+    * Δοκιμάστε σε ένα browser (στο host, όχι σε κάποιο container): http://localhost:3000/
+        * Credentials: admin | password
+    * Ok,.. τώρα really, [read the docs](https://github.com/huginn/huginn)!
+    * Hands-on test:
+        * Μεταβείτε στο Agents και προσθέστε δύο (χαμηλά, κουμπί **+ New Agent**):
+            * Πρώτα προσθέστε ένα Agent τύπου `Website Agent`: scrapes a website, XML document, or JSON feed and creates Events based on the results.  
+                * **Type**: `Website Agent`
+                * **Name**: `Ionio news feed scrapper`
+                * **Schedule**: `Every 10μ` ***! Υπερβολικό, απλά για να δούμε την εκτέλεση του Agent! Αυξήστε την περίοδο για οποιοδήποτε άλλο (όχι testing) σύστημα***
+                * **Keep events**: `7 days`
+                * **Options**:
+                ```
+                {
+                  "expected_update_period_in_days": "2",
+                  "url": "https://ionio.gr/gr/news/all-news-f1-all-f2-all/",
+                  "type": "html",
+                  "mode": "on_change",
+                  "extract": {
+                    "url": {
+                      "xpath": "//*[@class=\"news-list-block\"]/a/@href",
+                      "value": "."
+                    },
+                    "title": {
+                      "xpath": "//*[@class=\"news-list-block\"]/a",
+                      "value": "normalize-space(.)"
+                    }
+                  }
+                }
+                ```
+                Δοκιμάστε τη λειτουργία του Agent με εκτέλεση `Dry Run`. Αν όλα είναι σωστά, πρέπει να πήρατε απόκριση, σαν:  
+                ```
+                [
+                  {
+                    "url": "https://ionio.gr/gr/news/20465",
+                    "title": "ΒΥΡΩΝ: Η Ελληνική Επανάσταση «ζωντανεύει» με ένα παιχνίδι!"
+                  },
+                  {
+                    "url": "https://ionio.gr/gr/news/20464",
+                    "title": "Μνημόνιο συνεργασίας μεταξύ του Ιονίου Πανεπιστημίου και του Συνδέσμου Ημερήσιων Περιφερειακών Εφημερίδων"
+                  },
+                  ...
+                  {
+                    "url": "https://ionio.gr/gr/news/20212",
+                    "title": "Μελέτη και κατασκευή κτηρίου για τη στέγαση του Τμήματος Περιφερειακής Ανάπτυξης του Ιονίου Πανεπιστημίου στη Λευκάδα"
+                  }
+                ]
+                ```
+                Αυτά είναι τα events που θα παράγει αυτός ο Agent. Ας μελετήσουμε λίγο τι έγινε και πώς.
+
+                * Αποθηκεύουμε τον Agent
+                * Στη σελίδα `Agents` επιλέγουμε από το μενού (στη γραμμή του _Ionio news feed scrapper_) την επιλογή `Run` ώστε να εκτελεστεί ο Agent άμεσα.
+                * Περιοδικά, όταν τρέχει κάποιος Agent, εμφανίζεται ένα εικονίδιο, πάνω δεξιά στο toolbar:  
+                ![Huginn jobs](_img/huginn-jobs.png)  
+                Κλικ σε αυτό ή απλά μεταβείτε στο url <host:port>/jobs.
+                * Επιπλέον δείτε τα events που έχουν παραχθεί από το μενού `Events`.  
+                Είναι όλα τα ζεύγη url - title από τα news που αντλήθηκαν από το https://ionio.gr/gr/news/all-news-f1-all-f2-all/.
+                * Στη λίστα των Agents, κλικ στον Agent `Ionio news feed scrapper` και μελετήστε τα `Details` του, τα `Events` που έχει παράγει, τα `Logs` εκτέλεσής του.
+                Περιοδικά ο Agent τρέχει πάλι, αλλά όσο δεν αλλάζει το περιεχόμενο της https://ionio.gr/gr/news/all-news-f1-all-f2-all/ δεν παράγονται νέα events.
+
+            * Στη συνέχεια προσθέστε ένα Agent τύπου `Post Agent`: receives events from other agents (or runs periodically), merges those events with the Liquid-interpolated contents of payload, and sends the results as POST (or GET) requests to a specified url.
+                * **Type**: `Post Agent`
+                * **Name**: `POST to slack`
+                * **Schedule**: `Every 10μ` ***! Αυτό δεν είναι υπερβολικό, αν πρόκειται να λαμβάνουμε notifications, ας είναι αυτά συχνά..***
+                * **Keep events**: `7 days`
+                * **Sources**: `Ionio news feed scrapper`  ***! Αυτό είναι η είσοδος αυτού του Agent.***
+                * **Options**:
+                ```
+                {
+                  "post_url": "https://hooks.slack.com/services/___/___/___",
+                  "expected_receive_period_in_days": "1",
+                  "content_type": "json",
+                  "method": "post",
+                  "headers": {
+                    "Content-type": "application/json"
+                  },
+                  "payload": {
+                    "text": "{{ title }}; more on {{url}}"
+                  },
+                  "emit_events": "false",
+                  "no_merge": "false",
+                  "output_mode": "clean"
+                }
+                ```
+                _Χρησιμοποιήστε το slack hook της περασμένης εβδομάδας._  
+                Δοκιμάστε τη λειτουργία του Agent με εκτέλεση `Dry Run`. Στο dry run, προσθέστε (απλά κλικ) ένα από τα events που εμφανίζονται για να χρησιμοποιηθεί ως demo data.  
+                Αν όλα είναι σωστά, πρέπει να πήρατε απόκριση, σαν (στο huginn):  
+                ```
+                [00:00:00] INFO -- : Dry Run started
+                [00:00:00] INFO -- : Dry Run finished
+                ```
+                και να λάβατε ένα notification στο slack.
+
+                * Αποθηκεύουμε τον Agent
+                * Αν πάμε στον Agent `Ionio news feed scrapper` και εκτελέσουμε `Re-emit all events`, τότε αυτά τα events θα φτάσουν στον Agent `POST to slack` και από εκεί στο slack channel σας.
+
+        * Μεταβείτε στη σελίδα /diagram για να δείτε το γράφο των Agents που χρησιμοποιείτε.
+
+    * Μελετήστε τα διαθέσιμα Agents, βρίσκονται στο φάκελο `huginn/app/models/agents/post_agent.rb`
+
+**ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
+* Εξερευνήστε περισσότερο το Haginn, δοκιμάστε agents όπως:
+    * Website Agent για να λαμβάνετε μέσω API τον καιρό σε κάποια τοποθεσία.
+        * Χρησιμοποιήστε το openweathermap.org
+            * _Fetch hourly forecast for 48 hours for Corfu_:  
+            API call  
+            https://api.openweathermap.org/data/2.5/onecall?lat=39.666664&lon=19.749997&appid=YOURAPIID
+    * SlackAgent, για να μη χρειάζεται να κάνουμε απλά HTTP POST στο slack.
+        * Χρησιμοποιήστε [Liquid filters](https://shopify.dev/docs/themes/liquid/reference/filters) για να μορφοποιήσετε το μήνυμα που θα στείλετε στο slack.  
+        Πχ. το  
+        ```
+        {"dt":1616698800,"temp":281.95,"weather":"Clear"}
+        ```
+        σε
+        ```
+        Thu, Mar 25, 2021 - 12:00 :: Clear, temp=9.8oC
+        ```
