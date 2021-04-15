@@ -636,3 +636,96 @@ fi
         ```
         Thu, Mar 25, 2021 - 12:00 :: Clear, temp=9.8oC
         ```
+---
+
+##### NTFY (see legacy/2020)
+
+---
+
+##### JRNL.SH
+
+Εντός του container που δουλεύουμε όλες αυτές τις εβδομάδες...
+* Δημιουργήστε ένα φάκελο `/workspace/journal`, δουλεύουμε σε αυτόν.
+* Εγκαθιστούμε:
+```
+pip3 install jrnl
+```
+* Χρησιμοποιούμε!:
+```
+jrnl yesterday: Thinking what to do on SW lab. Mix lots of scripts!
+Path to your journal file (leave blank for /root/.local/share/jrnl/journal.txt): /workspace/journal/journal.txt
+Do you want to encrypt your journal? You can always change this later [y/N] N
+[Journal 'default' created at /workspace/journal/journal.txt]
+[Entry added to default journal]
+```
+* Ας δούμε τι περιέχει αυτό το αρχείο:
+`less journal.txt `
+```
+[2021-04-14 09:00] Thinking what to do on SW lab.
+Mix lots of scripts!
+journal.txt (END)
+```
+:fireworks: Είναι ένα απλό text αρχείο. Και όλοι ξέτουν ότι Text + Git = :heart:
+
+* _Minor hack, ας βλέπουμε σε ποιο branch ειμαστε_ `vi  /root/.bashrc` και προσθήκη:
+    ```
+    parse_git_branch() {
+         git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+    }
+    export PS1="\u@\h \[\e[32m\]\w \[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ "
+    ```
+
+* Ας οργαγώσουμε τον επαγγελματικό μας χρόνο:
+    ```
+    git checkout -b work_journal
+    Switched to a new branch 'work_journal'
+    rm journal.txt
+    touch journal.txt
+    less journal.txt
+    ```
+    Και τώρα ας προσθέσουμε μερικά journal entries:
+    ```
+    jrnl yesterday: Kicked off new project. This project will not only make me wealthy, it will make me famous too. Could lead to a Turing Award.
+    [Entry added to default journal]
+    jrnl today: Project backlog is huge already. I might need a partner, I wonder can we split the Award?
+    [Entry added to default journal]
+    ```
+    Ας δούμε τι γίνεται στο journal μας `jrnl -to now`.
+    ```
+    git add .
+    git commit -m "Work journal"
+    ```
+
+* Ας οργαγώσουμε τον προσωπικό μας χρόνο:
+    ```
+    git checkout master
+    git checkout -b personal_journal
+    Switched to a new branch 'personal_journal'
+    rm journal.txt
+    touch journal.txt
+    less journal.txt
+    ```
+    Και τώρα ας προσθέσουμε μερικά journal entries:
+    ```
+    jrnl yesterday: Found out about a great journal terminal app. I will start using it!
+    [Entry added to default journal]
+    jrnl today: Loving the journal app already. All I now need is content! THINK!
+    [Entry added to default journal]
+    ```
+    Ας δούμε τι γίνεται στο journal μας `jrnl -to now`.
+    ```
+    git add .
+    git commit -m "Personal journal entries"
+    ```
+
+* Και τώρα git magic!
+    * Αναζήτηση σε όλα τα journals: `git branch | cut -c3- | xargs git grep "I"`
+    Αποτελέσματα σε όλα τα branches:
+    ```
+    personal_journal:journal.txt:I will start using it!
+    personal_journal:journal.txt:All I now need is content! THINK!
+    work_journal:journal.txt:I might need a partner, I wonder can we split the Award?
+    ```
+
+**ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
+* Εξερευνήστε περισσότερο τις δυνατότητες του jrnl μαζί με το git. Πχ δημιουργήστε ένα shared github repo και μοιραστείτε με κάποιον άλλο το work_journal σας αλλά κρατήστε ιδιωτικό το personal_journal.
