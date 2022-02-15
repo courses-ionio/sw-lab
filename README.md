@@ -1,25 +1,24 @@
 ### Τεχνολογία Λογισμικού - Εργαστήριο
 
-__Zoom:__
-
-    Meeting ID: 956 3491 4993
-    Passcode: το όνομα του repo
 
 Έναρξη εργαστηρίου:
 
-    Πέμπτη, 18/2/2021, 09:00πμ
+    Πέμπτη, 17/2/2021, 11:00πμ - εργαστήριο Γαληνός
 
 ---
 
 ##### Περιβάλλον εργασίας
 
-Για την υλοποίηση των εργασιών του εργαστηρίου θα πρέπει να εργαστείτε σε ένα Unix/Linux terminal. Θα αξιοποιήσετε κάποιες από τις ήδη διαθέσιμες εντολές του shell, αλλά θα χρειαστεί να εγκαταστήσετε και κάποια νέα προγράμματα.
+Για την υλοποίηση των εργασιών του εργαστηρίου θα πρέπει να εργαστείτε σε ένα Unix/Linux terminal. Θα ξεκινήσουμε με ένα περιβάλλον εργασίας σε μια διαθέσιμη διανομή (πχ ubuntu) και αργότερα θα εργαστείτε στην εγκατάσταση ενός λειτουργικού από τον πηγαίο κωδικά του.  
 
-Θα εργαστείτε καθένας στο δικό του περιβάλλον εκτέλεσης και θα πρέπει να εξοικειωθείτε με τον τρόπο που σας εξυπηρετεί καλύτερα. _Ενδεικτικά_ μπορείτε να επιλέξετε μπορείτε να αξιοποιήσετε μία από τις πιο κάτω _use yur own device_ επιλογές:
+Θα αξιοποιήσετε κάποιες από τις ήδη διαθέσιμες εντολές του shell, αλλά θα χρειαστεί να εγκαταστήσετε και κάποια νέα προγράμματα.
+
+Θα εργαστείτε καθένας στο δικό του περιβάλλον εκτέλεσης και θα πρέπει να εξοικειωθείτε με τον τρόπο που σας εξυπηρετεί καλύτερα.
+Απότερος σκοπός είναι να δουλέψετε σε ένα σύστημα linux χωρίς systemd, όπως αναφέρουν οι οδηγίες του μαθήματος (https://courses-ionio.github.io/projects/dokey/).
+_Πριν όμως καταφέρετε να κάνετε αυτό_ μπορείτε να επιλέξετε μπορείτε να αξιοποιήσετε μία από τις πιο κάτω _use your own device_ επιλογές:
  * Αξιοποίηση ενός _reusable & disposable_ **linux docker container**, _οδηγίες πιο κάτω_
  * Ήδη εγκατεστημένο linux, πχ ως dual boot, όποια διανομή σας βολεύει/αρέσει
  * Εγκατάσταση ενός linux εντός virtual box
- * Αξιοποίηση Windows Linux Subsystem εφόσον το laptop σας τρέχει Win10, οδηγίες [εδώ](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
  * Χρήση _persistent live ubuntu usb_ (επιτρέπει την εκτέλεση XUbuntu Desktop περιβάλλοντος το οποίο διατηρεί τις αλλαγές που κάνετε, πχ εγκατάσταση προγραμμάτων)
    - Ακουλουθήστε [αυτές](https://www.howtogeek.com/howto/14912/create-a-persistent-bootable-ubuntu-usb-flash-drive/) τις οδηγίες και δημιουργήστε το δικό σας persistent live usb (αρκεί ένα usb flash drive 8GB, προτείνεται __USB3__)
 
@@ -29,18 +28,19 @@ __Zoom:__
 
 Εγκαταστήστε στο συστημά σας το [docker](https://www.docker.com/).
 * Ξεκινήστε ένα `container` βασισμένο πχ στο Ubuntu 20.04 `image`, μελετήστε [εδώ](https://www.docker.com/resources/what-container) τη διαφορά/σχέση images-containers:  
-`docker run --name ionio-sw-lab -d -it ubuntu:20.04 `
+`docker run --name ionio-sw-lab-2022 -it -p 8080:4000 ubuntu:20.04`
     * Η παράμετρος `--name` ονοματίζει τον container ώστε να μπορούμε να το σταματήσουμε/ξεκινήσουμε εύκολα διατηρώντας της αλλαγές που κάνουμε
-    * Η παράμετρος `--it` εξασφαλίζει ότι ο container, αφού δεν το ζητάμε να εκτελέσει κάποια εντολή ή πρόγραμμα, δεν θα τερματιστεί με την ολοκλήρωση της εντολής
+    * Η παράμετρος `-it` εξασφαλίζει ότι ο container, αφού δεν το ζητάμε να εκτελέσει κάποια εντολή ή πρόγραμμα, δεν θα τερματιστεί με την ολοκλήρωση της εντολής
+    * Η παράμετρος `-p` κάνει port mapping από το 8080 του μηχανήματός μας στο 4000 εντός του νέου container... τώρα δε μας χρειάζεται, αλλά θα το βρούμε μπροστά μας ;-)
     * Η διανομή που ξεκινάμε είναι `ubuntu` έκδοση `20.04`
-    * _Tip_ Εκτελέστε την εντολή `docker ps` για να επιβεβαιώσετε ότι ο container σας τρέχει, να δείτε το container id του και το όνομά του:
+    * _Tip_ Εκτελέστε σε ένα άλλο terminal την εντολή `docker ps` για να επιβεβαιώσετε ότι ο container σας τρέχει, να δείτε το container id του και το όνομά του:
     ```
     CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-    16a2dc0d7c03        ubuntu:20.04        "/bin/bash"         About an hour ago   Up About an hour                        ionio-sw-lab
+    16a2dc0d7c03        ubuntu:20.04        "/bin/bash"         About an hour ago   Up About an hour                        ionio-sw-lab-2022
     ```
 
-* Συνδεθείτε στον container σας για να ξεκινήσουμε να δουλεύουμε εντός αυτού.  
-`docker attach ionio-sw-lab`  
+* Λογικά είστε ήδη εντός του container `ionio-sw-lab-2022`, αν για κάποιο λόγο δεμ είστε, συνδεθείτε στον container σας για να ξεκινήσουμε να δουλεύουμε εντός αυτού.  
+`docker attach ionio-sw-lab-2022`  
 θα πρέπει να βρεθείτε εντός του container, σε ένα terminal και να μπορείτε να εκτελέσετε τυπικές εντολές bash:
 ```
 root@16a2dc0d7c03:/# pwd
@@ -62,13 +62,13 @@ hello
     * Αν τώρα εκτελέσετε `docker ps` **δεν** θα βλέπετε τον container σας, γιατί έχει σταματήσει. Εκτελέστε `docker ps -a` για να δείτε και τους σταματημένους containers:  
     ```
     CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                     PORTS               NAMES
-    16a2dc0d7c03        ubuntu:20.04        "/bin/bash"         About an hour ago   Exited (0) 2 minutes ago                       ionio-sw-lab
+    16a2dc0d7c03        ubuntu:20.04        "/bin/bash"         About an hour ago   Exited (0) 2 minutes ago                       ionio-sw-lab-2022
     ```
 
 * Ξεκινάμε, πάλι:  
-```docker start ionio-sw-lab```  
+```docker start ionio-sw-lab-2022```  
 και συνδεόμαστε στον container:  
-```docker attach ionio-sw-lab```  
+```docker attach ionio-sw-lab-2022```  
 ελέγχουμε αν οι αλλαγές μας έχουν διατηρηθεί:
 ```
 root@16a2dc0d7c03:/# ls workspace/
