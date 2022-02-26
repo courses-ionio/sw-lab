@@ -167,26 +167,17 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
         ```
         * Ας δούμε το site μας... `jekyll serve --host 0.0.0.0 &`. Το site είναι διαθέσιμο στο `http://localhost:4000` (και σε κάθε άλλη ip που ακούει ο container αφού χρησιμοποιήσαμε το `--host 0.0.0.0`). Πώς θα το δούμε;
             * Από το terminal πχ με lynx. Εγκαθιστούμε `apt-get install lynx` - χρησιμοποιούμε `lynx localhost:4000/site`
-            * Από το pc μας?
-                * Το localhost του docker container __δεν__ είναι το localhost του μηχανήματός μας! Αλλά μπορούμε να κάνουμε port mapping από ένα port του μηχανήματός μας σε ένα port εντός του docker. Αυτό, βέβαια, κανονικά γίνεται κατά τη δημιουργία του container.. αλλά θα τα καταφέρουμε..  
-                Πώς;
-                    * Βγαίνουμε από τον container μας και τον τερματίζουμε:  
-                    `docker stop __container_name__`
-                    * Δημιουργούμε ένα image με βάση τον container μας:  
-                    `docker commit __container_name__ __container_name__-img`
-                    * Ξεκινάμε ένα __νέο__ container με βάση το image που μόλις δημιουργήσαμε __και__ port mapping από το 8080 του μηχανήματός μας στο 4000 εντός του νέου container:  
-                    `docker run --name ionio-sw-lab2 -p 8080:4000 -it ionio-sw-lab-img`
-                    * Πάμε στο folder `cd /workspace/jekyll/` και τρέχουμε πάλι το `jekyll serve --host 0.0.0.0 &`
-                    * Πάμε σε ένα browser στο pc μας, δίνουμε διεύθυνση `http://0.0.0.0:8080/site/` και... βλέπουμε το site της μίας γραμμής που έχουμε φτιάξει ως εδώ.
-        * Cleaning up.. έχουμε ένα άχρηστο πλέον container, το ionio-sw-lab της περασμένης εβδομάδας, αφού μόλις δημιουργήσαμε ένα κλώνο του με port mapping. Ας το ξεφορτωθούμε και ας αλλάξουμε όνομα στο νέο container μας.
-            * Διαγραφή παλιού container `docker rm ionio-sw-lab`
-            * Μετονομασία νέου `rename ionio-sw-lab2 ionio-sw-lab` (μπορεί να γίνει όσο τρέχει)
+            * Από το pc μας, τώρα θα αξιοποιηθεί η παράμετρος `-p 8080:4000` που είχαμε δώσει όταν δημιουργήσαμε τον container. Η παράμετρος αυτή ενεργοποιεί port mapping από το host λειτουργικό μας προς τον container, άρα ό,τι είναι προσβάσιμο στον container στο port 4000 θα είναι προσβάσιμο στο host λειτουργικό μας στο port 8080 (_αλλά όχι το αντίστροφο από τον container προς το host! δεν υπάρχει κάποια τρύπα ασφάλειας_).  
+            Άρα πολύ απλά στο βασικό μας λειτουργικό, μέσα από ένα brower ανοίγουμε τη διεύθυνση http://localhost:8080 και βλέπουμε τη σελίδα που _servήρει_ το Jekyll.  
 
     * Τώρα ας ξεκινήσουμε να φτιάχνουμε ένα site που θα περιέχει το cv μας.
         * Νέο site.. = νέο folder για το project μας  
         `mkdir /workspace/cv` και ας μεταβούμε σε αυτό  
         `cd /workspace/cv`
-        * Αρχικοποιούμε όπως πριν... _bundler κλπ_
+        * Αρχικοποιούμε όπως πριν, δεν ξεχνάμε τα προκαταρκτικά βήματα (εντός του folder που φιλοξενεί το νέο site μας):
+            * `bundle init`
+            * Προσθήκη gem στο Gemfile
+            * `bundler`
         * Δημιουργούμε folder `mkdir /workspace/cv/site` και __διαχωρίζουμε μορφή από περιεχόμενο__:
             * Αρχείο view `vi /workspace/cv/site/index.html`, προσέξτε την αλλαγή με την προσθήκη δύο γραμμών `---` στην αρχή του αρχείου και `{{...}}` με ονόματα μεταβλητών:  
             ```
@@ -214,7 +205,8 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
              - wki.pe/friedrich_nietzsche
              - twitter.com/tinynietzsche
             ```
-            * Τρέχουμε το `jekyll serve --host 0.0.0.0 &` (αν τρέχει κάποιο άλλο jekyll, κάντε το kill) ελέγχουμε και... βλέπουμε ένα site στο οποίο τα δεδομένα διαχωρίζονται από την εμφάνιση!
+            * Εκτελούμε `bundle exec jekyll build`
+            * Και... τρέχουμε το `jekyll serve --host 0.0.0.0 &` (αν τρέχει κάποιο άλλο jekyll, οπότε δεν θα τρέξει το νέο jekyll serve instance, κάντε το `kill` με βάση το PID του) ελέγχουμε και... βλέπουμε ένα site στο οποίο τα δεδομένα διαχωρίζονται από την εμφάνιση!
             * Αλλάζουμε το index.html αρχείο για να δείχνει και τα url με ένα for loop:
             ```
              ---
@@ -247,7 +239,7 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
                 * Τώρα κάθε φορά που θα κάνουμε ένα commit, θα τρέχει το jekyll και ό,τι παράγεται θα πηγαίνει στο github pages ως rendered html site.
         * Αφήνουμε το github repo ως έχει και πάμε πίσω στο container μας.
             * Πάμε στο `cd /workspace/github` και yet another jekyll site: `mkdir cv`, `cd cv`.
-        * Αξιοποιούμε το bundler που εγκαταστήσαμε νωρίτερα `bundle init`
+        * Αξιοποιούμε το bundler που εγκαταστήσαμε νωρίτερα, άρα `bundle init`
         * Προσθέτουμε στο τέλος του Gemfile που μόλις δημιουργήθηκε:
             ```
             gem "jekyll", "~> 3.9.0"
@@ -307,7 +299,8 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
                 Άρα..
         * Commit και push..
             * `git commit -m "Ιnitial CV commit"`
-            * `git push -u origin master`  
+            * `git push -u origin master`
+                * **Προσοχή εδώ, το github πλεον δεν δέχεται password authentication, θα πρέπει να πάτε στο `Github.com > Settings > Developer settings > Personal access tokens` και να εκδόσετε ένα νέο token (που να τα κάνει όλα ή να κάνετε refine τις επιλογές πρόσβασης που παρέχετε) και αυτό το token θα είναι το password που θα χρησιμοποιείτε**  
             Με το push στο __github.com__ το site γινεται _build_ και ανεβαίνει και στο __github.io__ (Github Pages)!
 
 **ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**
