@@ -309,3 +309,57 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
     * Τσεκάρετε τακτικά locally, όταν είστε ικανοποιημένοι ανεβάστε στο github με push
 3. Φροντίστε για έχετε καταγράψει στο asciinema τη δουλεία σας
 4. Κάντε commit την πρόοδό σας
+
+---
+##### Lab3: Github submodule
+
+Θα αξιοποιήσουμε ένα έτοιμο CV project ως submodule το οποίο παράγει αυτόματα μια PDF έκδοση του CV μας.
+
+* Προσθέτουμε ως submodule το repo `https://github.com/mrzool/cv-boilerplate` στο φάκελο του cv μας:  
+```
+$ /workspace/cv-2022-1 (master)$ git submodule add https://github.com/mrzool/cv-boilerplate _2pdf
+Cloning into '/workspace/cv-2022-1/_2pdf'...
+remote: Enumerating objects: 318, done.
+remote: Counting objects: 100% (28/28), done.
+remote: Compressing objects: 100% (20/20), done.
+remote: Total 318 (delta 15), reused 17 (delta 8), pack-reused 290
+Receiving objects: 100% (318/318), 822.81 KiB | 2.77 MiB/s, done.
+Resolving deltas: 100% (190/190), done.
+$ /workspace/cv-2022-1 (master)$ ls _2pdf/
+details.yml  makefile  output.pdf  preview.png  README.md  template.tex
+```
+Ήδη το περιεχόμενο του submodule repo έχει προστεθεί στο φάκελό μας, αλλά υπάρχουν και dependencies που χρειάζονται:
+    * Εγκατάσταση tinytex (χρειάζεται; δοκιμάστε να το παραλείψετε):  
+    ```
+    cd ~
+    apt install wget
+    wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
+    ```
+    * Προσθήκη στο PATH  
+    `vi` το αρχείο `~/.bashrc` και προσθήκη σε αυτό `export PATH=$PATH:$HOME/bin`
+    * Εγκατάσταση xelatex  
+    ```apt-get install texlive-xetex```
+    * Χρήση `tlmgr` για εγκατάσταση απαιτούμενων latex packages
+        * Για κάθε package εκτελέστε πχ `tlmgr install polyglossia`
+        * Αν δε βρίσκετε το package, ψάξτε το `tlmgr search multicol`
+    * Εγκατάσταση pandoc  
+    ```apt install pandoc```
+
+* Εντός του `/workspace/cv-2022-1/_2pdf` εκτελέστε `make`  
+Η εντολή `make` ουσιαστικά εκτελεί: `pandoc details.yml -o output.pdf --template=template.tex --pdf-engine=xelatex`
+    * _Τρέχει; Αν λείπει κάποιο font εκτελέστε `fc-list` για να δείτε τι fonts υπάρχουν διαθέσιμα και αντικαταστήστε το `mainfont` στο αρχείο `details.yml`_
+    * Ελέγξτε το παραγόμενο pdf αρχείο μέσω ενός browser στο url: http://localhost:8080/_2pdf/output.pdf
+        * Το βλέπετε; https://github.com/jekyll/jekyll/issues/55
+        * Μεταφέρετέ το (με `mv` ή `cp`) κάπου που θα το βλέπετε
+    * Αλλάξτε το περιεχόμενο του details.yml και ξαναδημιουργήστε το pdf (και ξαναμεταφέρετέ το)
+
+* Δημιουργήστε ένα pdf με βάση τα _δικά_ σας δεδομένα τα οποία βρίσκονται στο αρχείο `/workspace/cv-2022-1/_data/details.yml` και το οποίο να βρίσκεται στο root folder του repo σας με όνομα αρχείο `cv.pdf`
+
+* Κάντε `git add` και `commit` το `cv.pdf`, όχι το φάκελο `_2pdf` και κάντε push στο GitHub.
+* Δείτε το pdf cv σας στο github pages.
+
+**ToDo (σας, <ins>έχετε χρόνο μέχρι την 7η εβδομάδα</ins>):**
+1. _Συγχρονίστε οπτικά την html και pdf έκδοση του cv σας.
+    * Τσεκάρετε τακτικά locally, όταν είστε ικανοποιημένοι ανεβάστε στο github με push
+2. Φροντίστε για έχετε καταγράψει στο asciinema τη δουλεία σας
+3. Κάντε commit την πρόοδό σας
