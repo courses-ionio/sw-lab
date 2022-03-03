@@ -329,7 +329,8 @@ $ /workspace/cv-2022-1 (master)$ ls _2pdf/
 details.yml  makefile  output.pdf  preview.png  README.md  template.tex
 ```
 Ήδη το περιεχόμενο του submodule repo έχει προστεθεί στο φάκελό μας, αλλά υπάρχουν και dependencies που χρειάζονται:
-    * Εγκατάσταση tinytex (χρειάζεται; δοκιμάστε να το παραλείψετε):  
+
+* Εγκατάσταση tinytex (χρειάζεται; δοκιμάστε να το παραλείψετε):  
     ```
     cd ~
     apt install wget
