@@ -311,7 +311,7 @@ Fork το αποθετήριο του μαθηματος https://github.com/cour
 4. Κάντε commit την πρόοδό σας
 
 ---
-##### Lab3: Github submodule
+##### Lab3 & 4: Github submodule
 
 Θα αξιοποιήσουμε ένα έτοιμο CV project ως submodule το οποίο παράγει αυτόματα μια PDF έκδοση του CV μας.
 
@@ -364,3 +364,89 @@ details.yml  makefile  output.pdf  preview.png  README.md  template.tex
     * Τσεκάρετε τακτικά locally, όταν είστε ικανοποιημένοι ανεβάστε στο github με push
 2. Φροντίστε για έχετε καταγράψει στο asciinema τη δουλεία σας
 3. Κάντε commit την πρόοδό σας
+
+**Follow-up (του lab 3)**  βασισμένο στο https://github.com/courses-ionio/help/discussions/287#discussion-3912896  
+Τι γίνεται εάν προσθέσουμε ως submodule κώδικα τον οποίο θέλουμε να αλλάξουμε και να κάνουμε commit. _Αν το submodule δεν είναι δικό μας repo, τότε το commit/push -όπως είναι λογικό- αποτυγχάνει :-(_  
+Ας το δοκιμάσουμε:
+1. Κάνουμε clone το repo που ήδη περιέχει ένα _ξένο_ submodule:
+    ```
+    # git clone https://github.com/riggas-ionio/cv-2022-1.git
+    Cloning into 'cv-2022-1'...
+    remote: Enumerating objects: 17, done.
+    remote: Counting objects: 100% (17/17), done.
+    remote: Compressing objects: 100% (12/12), done.
+    remote: Total 17 (delta 2), reused 17 (delta 2), pack-reused 0
+    Unpacking objects: 100% (17/17), 1.85 KiB | 52.00 KiB/s, done.
+    ```
+
+2. Ελέγχουμε το φάκελο του submodule ο οποίος είναι κενός.
+    ```
+    cd cv-2022-1
+    ls -al
+    total 28
+    drwxr-xr-x 5 root root 4096 Mar  9 19:51 .
+    drwxr-xr-x 9 root root 4096 Mar  9 19:51 ..
+    drwxr-xr-x 8 root root 4096 Mar  9 19:51 .git
+    -rw-r--r-- 1 root root   82 Mar  9 19:51 .gitmodules
+    ```  
+    Το submodule είναι _συνδεδεμένο_ με το repo μας, αλλά όταν κάνουμε clone το repo μας, ο κώδικας του submodule δεν κατεβαίνει.
+
+3. Ας κατεβάσουμε τον κώδικα του submodule. Στον αρχικό φάκελο του repo μας:
+    ```
+    git submodule update --init
+    ls -al _2pdf/
+    total 368
+    drwxr-xr-x 2 root root   4096 Mar  9 20:14 .
+    drwxr-xr-x 5 root root   4096 Mar  9 19:51 ..
+    -rw-r--r-- 1 root root     30 Mar  9 20:14 .git
+    -rw-r--r-- 1 root root     11 Mar  9 20:14 .gitignore
+    -rw-r--r-- 1 root root   6069 Mar  9 20:14 README.md
+    -rw-r--r-- 1 root root   1366 Mar  9 20:14 details.yml
+    -rw-r--r-- 1 root root    190 Mar  9 20:14 makefile
+    -rw-r--r-- 1 root root  35914 Mar  9 20:14 output.pdf
+    -rw-r--r-- 1 root root 299228 Mar  9 20:14 preview.png
+    -rw-r--r-- 1 root root   2866 Mar  9 20:14 template.tex    
+    ```
+
+4. Δοκιμάζουμε να κάνουμε μια αλλαγή σε ένα από τα αρχεία του submodule (_το οποίο *δεν* είναι δικό μας repo_):
+    ```
+    cd _2pdf/
+    vi details.yml
+    git add details.yml
+    git commit -m "Changed a file in (someone else's) submodule"
+    [detached HEAD 3ebf9e1] Changed a file in submodule
+     1 file changed, 1 insertion(+), 1 deletion(-)
+    git push origin master
+    Username for 'https://github.com': riggas-ionio
+    Password for 'https://riggas-ionio@github.com':
+    remote: Permission to mrzool/cv-boilerplate.git denied to riggas-ionio.
+    fatal: unable to access 'https://github.com/mrzool/cv-boilerplate/': The requested URL returned error: 403
+    ```  
+    και βέβαια αποτυγχάνει το push σε ξένο repo!  
+    Θα ήταν δόκιμο να κάνουμε pull request, αντί push, αφού το repo είναι ξένο.  
+    Αν όμως _για κάποιο λόγο_ πρέπει να χρησιμοποιούμε ένα repo το οποίο περιέχει submodule και θέλουμε να κάνουμε και push στο submodule, δεν έχουμε παρά να _οικειοποιηθούμε_ κάνοντάς το fork και **αντικαθιστώντας** το _ξένο_ submodule με το _οικειομποιημένο_ (forked) submodule.
+
+5. Σβύνουμε ό,τι κάναμε ως εδώ (το folder με το αρχικό clone)..  
+    ```
+    cd /workspace
+    rm -rf cv-2022-1
+    ```  
+    και εκτελούμε πάλι τα βήματα 1 και 2.
+
+6. (ή νέο 3) Σβύνουμε το φάκελο του submodule αλλά και ό,τι πληροφορία περιέχει το git για το submodule.
+    ```
+    git rm --cached _2pdf/
+    rm -rf _2pdf/
+    ```
+
+7. Προσθέτουμε το δικό μας (οικειοποιημένο, forked) repo και το αποθηκεύουμε σε φάκελο όλοιο με αυτό που μόλις σβύσαμε:  
+    ```
+    git submodule add https://github.com/riggas-ionio/cv-boilerplate _2pdf
+    ```  
+    τα αρχεία κατεβαίνουν από το **δικό** μας repo, άρα ότι αλλαγές και εάν κάνουμε στο submodule μπορούμε να τις κάνουμε commit/push.. γιατί πολύ απλά είναι δικό μας repo!   
+    **Αλλά** προσοχή:  
+    **Αν..**  
+    κάνετε αλλαγές σε αρχεία του submodule και τα κάνετε commit εντός του submodule, _αλλά δεν τα κάνετε push_  
+    **και**  
+    κάνετε commit και push το root φάκελο (που περιέχει το submodule), τότε στο github θα λείπει το commit του submodule που θα βρίσκεται ακόμη στο δίσκο σας,  
+    **οπότε** θα βλέπετε `HTTP 404 Error` 😱.
