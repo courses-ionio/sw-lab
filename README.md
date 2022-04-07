@@ -484,3 +484,19 @@ details.yml  makefile  output.pdf  preview.png  README.md  template.tex
 
 **ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
 * Εξερευνήστε περισσότερο το Netlify, πχ χαρίστε ένα πιο κομψό url στο site σας.
+
+---
+
+##### Lab 6: CV (Github pages + Netlify) + αυτόματη περίληψη του pdf cv σε κάθε commit.
+
+Έχουμε ήδη δει πώς μπορούμε να πετύχουμε Continuous Deployment του html CV σε Github pages + Netlify. Πώς όμως μπορούμε να αυτοματοποιήσουμε τη διαδικασία και για τη PDF έκδοση του CV; Δλδ κάθε φορά που κάνουμε μια αλλαγή στο index.html ή στο details.yml και κάνουμε commit το pdf να δημιουργείται αυτόματα και να περιλαμβάνεται στο τελευταίο commit;
+
+* Θα αξιοποιήσουμε [Git hooks](https://www.atlassian.com/git/tutorials/git-hooks)  τα οποία είναι _"scripts that run automatically every time a particular event occurs in a Git repository. They let you customize Git’s internal behavior and trigger customizable actions at key points in the development life cycle"_  
+    * Σε κάθε git repo folder υπάρχει ένας κρυφός φάκελος, ο `.git/hooks`, ο οποίος περιέχει ποικίλα hook samples. Για κάθε sample hook το filename του δηλώνει πότε εκτελείται.
+    * Χρησιμοποιήστε [αυτή](https://stackoverflow.com/questions/3284292/can-a-git-hook-automatically-add-files-to-the-commit/12802592#12802592) την τεχνική για να μπορέσετε να προσθέσετε ένα αρχείο (το `cv.pdf`) στο τελευταίο commit.
+        * Για να έχετε πάντα διαθέσιμο το πιο επικαιροποιημένο `cv.pdf`, εντός του κατάλληλου git hook μπορείτε να παράγεται το `cv.pdf` χρησιμοποιώντας ό,τι κάνατε στο Lab 3 για την παραγωγή pdf από δεδομένα σε yaml μορφή και ένα προτυπο tex αρχείο.
+    * Τροποποιήστε το `index.html` ώστε να περιέχει ένα link που να δείχνει στο `cv.pdf` αρχειο.
+
+**ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
+* Συνδυάστε όλα τα προηγούμενα ώστε σε κάθε commit να παράγεται νέο `cv.pdf` και αυτό να προστίθεται στο τελευταίο commit.
+* Μπορείτε να κάνετε refine τη διαδικασία, ώστε νέο pdf να παράγεται (και συνεπώς να προστίθεται στο τελευταίο commit) μόνο εφόσον έχει υπάρξει αλλαγή σε αρχείο που επηρεάζει το `cv.pdf` (πχ στο yaml ή το tex αρχείο); Γιατί να σπαταλάτε processing resources εάν απλά έχει αλλάξει η γραμματοσειρά πχ στο `index.html`;
