@@ -604,3 +604,15 @@ details.yml  makefile  output.pdf  preview.png  README.md  template.tex
 
 * :fireworks: Αφού δεν υπάρχει module για το slack api (που να δουλεύει με webhook)... γιατί δε φτιάχνετε ένα; _λίγη αλλαγή το module http απαιτείται μόνο!_  
 :fireworks: :fireworks: Αφού το φτιάξετε, γιατί δεν το ανεβάζετε και στο github! Κάντε και ένα pull request στο mqttwarn και ίσως γίνετε μέρος του δημόσιου ανοιχτού λογισμικού! :-)
+
+---
+
+##### Lab 9: Terminal multiplexing: doing more than one thing on a single terminal
+
+Εγκαταστήστε το tmux ακολουθώντας τις οδηγίες: https://linuxize.com/post/getting-started-with-tmux/.  
+Το tmux σας δίνει τη δυνατότητα να έχετε πολλαπλά terminal sessions στο ίδιο παράθυρο.  
+
+* Ξεκινήστε το tmux εντός ενός terminal σας εκτελώντας `tmux`. Δημιουργήθηκε ένα νέο session από το οποίο μπορείτε να εξέλθετε χωρίς να τερματιστεί με `Ctrl+b` `d`.
+* Από το βασικό σας terminal (εκτός του tmux) δημιουργήστε ένα νέο session με ονομασία `tmux new -s goorm`.
+    * Εντός του νέου session, συνδεθείτε στο goorm container της περασμένης εβδομάδας. Οδηγίες σύνδεσης στο μενού του Goorm: `CONTAINER > SSH Configuration`, όπου θα δημιουργήσετε ssh password.
+* Αξιοποιήστε το (ένα, μοναδικό) terminal παράθυρό σας για να εργαστείτε παράλληλα στο τοπικό μηχάνημά σας και στο goorm ssh session σας με εναλλαγή μεταξύ των tmux sessions. 
