@@ -518,3 +518,89 @@ details.yml  makefile  output.pdf  preview.png  README.md  template.tex
 **ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
 * Επεξεργαστείτε τα git hooks της περασμένης εβδομάδας έτσι ώστε όποτε γίνεται commit μια νέα έκδοση του `cv.pdf` να λαμβάνετε μια ειδοποίηση από το `ntfy`.
 * Αξιοποιήστε το μηχανισμό [slack incoming webhooks](https://api.slack.com/legacy/custom-integrations/messaging/webhooks) ώστε να λαμβάνεται τις ειδοποιήσεις σας σε ένα channel εντός ενός workspace σας.
+
+---
+
+##### Lab 8: CV + Continuous Integration και MQTT notifications
+
+Δημιουργήστε ένα (free) account στο https://ide.goorm.io/. Δημιουργήστε ένα container βασισμένο σε python.  
+Μόλις αποκτήσατε ένα cloud based linux machine ;-). Ξεκινάμε..  
+
+* Εγκαταστήστε το [mosquitto](https://mosquitto.org/) ένα mqtt broker: `apt-get install mosquitto`
+    * Τρέχει;... δοκιμάστε: `/etc/init.d/mosquitto status`, αν το αποτέλεσμα είναι  
+    `mosquitto is not running`  
+    ελέγξτε το logging που έγινε κατά την εγκατάσταση.
+    Αν αναφέρει  
+    `invoke-rc.d: policy-rc.d denied execution of start.`  
+    τότε εκτελέστε:  
+    ```
+    printf '#!/bin/sh \n exit 0' > /usr/sbin/policy-rc.d
+    /etc/init.d/mosquitto start
+    /etc/init.d/mosquitto status
+    ```
+    και το πρόβλημα πρέπει να λύθηκε, αν όχι _google it!_
+* Εγκαταστήστε και αντίστοιχους clients:  
+`apt-get install mosquitto-clients`
+    * Δοκιμάστε... `mosquitto_sub -t "notifications" &`
+    και.. `mosquitto_pub -m "Hello World from mosquitto_pub client" -t "notifications"`  
+    Εμφανίστηκε το μήνυμα; Όλα καλά, αλλιώς.. _debug it!_
+
+* Εγκαταστήστε το [mqttwarn](https://github.com/jpmens/mqttwarn):
+    ```
+    pip3 install --upgrade
+    pip3 install mqttwarn
+    ```
+    * Δημιουργήστε και μεταβείτε σε ένα φάκελο `/workspace/mqttwarn`
+    * Ακολουθήστε τα βήματα του configuration που περιγράφονται:  
+    ```
+    # Create configuration file
+    mqttwarn make-config > mqttwarn.ini
+
+    # Create file for custom functions
+    mqttwarn make-samplefuncs > samplefuncs.py
+    ```
+    * Προσθέστε το config τις απαραίτητες ρυθμίσεις για το [http](https://github.com/jpmens/mqttwarn/blob/master/HANDBOOK.md#http).
+        * Τροποποιήστε κατάλληλα το post action ώστε να κάνει post στο url του slack api endpoint σας.  
+        Σημεία στο αρχείο init που χρειάζεται να <u>παρέμβετε</u> (_μην καταργήσετε συνολικά το .ini αρχείο_) είναι τα:
+        ```
+        ; name the service providers you will be using.
+        launch    = file, log, http
+
+        ; -------
+        ; Targets
+        ; -------
+
+        [config:http]
+        timeout = 60
+        targets = {
+                        #method     #URL               # query params or None                              # list auth # Json
+          'notifications'    : [ "post", "https://hooks.slack.com/services/___/___/___", None, True ]
+          }
+
+        ; ------------------------------------------
+        ;                  Basic
+        ; ------------------------------------------
+
+        [hello/1]
+        ; echo '{"name": "temperature", "number": 42.42}' | mosquitto_pub -h localhost -t hello/1 -l
+        targets = log:info
+        format = u'{name}: {number} => {_dthhmm}'
+
+        [notifications]
+        targets = http
+        ```    
+        Χρησιμοποιήστε το slack hook της περασμένης εβδομάδας.    
+    * Ίσως χρειαστεί λίγο debugging ο κώδικας του http module :-)  
+    Αν παρατηρήσετε τα logging νημύματα του mqttwarn προκύπτει σφάλμα κατά την εκτέλεση του αρχείο `/usr/local/lib/python3.8/dist-packages/mqttwarn/services/http.py`: ***'Request' object has no attribute 'add_data'***.  
+    Κάνετε edit το αρχείο τροποποιώντας τη γραμμή:  
+    `#request.add_data(encoded_params)` σε  
+    `request.data = bytes(encoded_params, 'utf-8')`  
+    Αν κάνετε publish στο mosquitto ένα json το οποίο αποδέχεται το slack, θα πρέπει να δείτε το μήνυμά σας στο slack.  
+    Αν το μήνυμα δεν είναι κατάλληλα μορφοποιημένο για το slack, θα βλέπετε στο mqttwarn log ***HTTP Error 400: Bad Request***, αρκεί να στείλετε ένα ορθό json formatted μήνυμα στο hook.    
+
+**ToDo (σας, <ins>για αυτή την εβδομάδα</ins>):**  
+* Επεξεργαστείτε τα git hooks της περασμένης εβδομάδας έτσι ώστε όποτε γίνεται commit μια νέα έκδοση του `cv.pdf` να στέλνετε ένα mqtt message στο mosquitto που τρέχει στο goorm container σας και από εκεί να γίνεται κατάλληλη μορφοποίηση και προώθηση στο slack webhook σας.  
+Ο goorm container σας είναι προσβάσιμος μέσω url που μπορείτε να βρείτε στο μενού `PROJECT > Running URL and Port`. Βρείτε σε port _ακούει_ ο mqtt broker και αν αυτό δεν είναι προσβάσιμο (ανοιχτό) φροντίστε να γίνει, αν χρειαστεί αξιοποιήστε το μηχανισμό `CONTAINER > Port Forwarding Configuration`.
+
+* :fireworks: Αφού δεν υπάρχει module για το slack api (που να δουλεύει με webhook)... γιατί δε φτιάχνετε ένα; _λίγη αλλαγή το module http απαιτείται μόνο!_  
+:fireworks: :fireworks: Αφού το φτιάξετε, γιατί δεν το ανεβάζετε και στο github! Κάντε και ένα pull request στο mqttwarn και ίσως γίνετε μέρος του δημόσιου ανοιχτού λογισμικού! :-)
