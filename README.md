@@ -615,4 +615,5 @@ details.yml  makefile  output.pdf  preview.png  README.md  template.tex
 * Ξεκινήστε το tmux εντός ενός terminal σας εκτελώντας `tmux`. Δημιουργήθηκε ένα νέο session από το οποίο μπορείτε να εξέλθετε χωρίς να τερματιστεί με `Ctrl+b` `d`.
 * Από το βασικό σας terminal (εκτός του tmux) δημιουργήστε ένα νέο session με ονομασία `tmux new -s goorm`.
     * Εντός του νέου session, συνδεθείτε στο goorm container της περασμένης εβδομάδας. Οδηγίες σύνδεσης στο μενού του Goorm: `CONTAINER > SSH Configuration`, όπου θα δημιουργήσετε ssh password.
-* Αξιοποιήστε το (ένα, μοναδικό) terminal παράθυρό σας για να εργαστείτε παράλληλα στο τοπικό μηχάνημά σας και στο goorm ssh session σας με εναλλαγή μεταξύ των tmux sessions. 
+* Αξιοποιήστε το (ένα, μοναδικό) terminal παράθυρό σας για να εργαστείτε παράλληλα στο τοπικό μηχάνημά σας και στο goorm ssh session σας με εναλλαγή μεταξύ των tmux sessions.
+* Εξερευνήστε plugins τα οποία σας επιτρέπουν να κάνετε save και restore τα tmux sessions. 
